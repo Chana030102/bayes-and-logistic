@@ -53,16 +53,16 @@ class Spam_Naive_Bayes:
     # Classify provided data
     def predict(self,data):
  
-        a = 1/numpy.sqrt(2*pi*self.spam_std)
-        b = -(data-self.spam_mean)/(2*numpy.square(self.spam_std))
-        n_spam = numpy.log(a)
-        n_spam = numpy.add(a,b)
+        a = 1/(numpy.sqrt(2*pi)*self.spam_std)
+        b = numpy.exp(-1*numpy.square(data-self.spam_mean)/(2*numpy.square(self.spam_std)))
+        n_spam = numpy.multiply(a,b)
+        n_spam = numpy.log(n_spam)
         self.n_spam = numpy.sum(n_spam,axis=1) + numpy.log(self.p_spam)
 
-        a = 1/numpy.sqrt(2*pi*self.nonspam_std)
-        b = -(data-self.nonspam_mean)/(2*numpy.square(self.nonspam_std))
-        n_nonspam = numpy.log(a)
-        n_nonspam = numpy.add(a,b)
+        a = 1/(numpy.sqrt(2*pi)*self.nonspam_std)
+        b = numpy.exp(-1*numpy.square(data-self.nonspam_mean)/(2*numpy.square(self.nonspam_std)))
+        n_nonspam = numpy.multiply(a,b)
+        n_nonspam = numpy.log(n_nonspam)
         self.n_nonspam = numpy.sum(n_nonspam,axis=1) + numpy.log(self.p_nonspam)
 
         return numpy.argmax([self.n_nonspam,self.n_spam],axis=0)
