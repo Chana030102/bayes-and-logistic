@@ -1,12 +1,20 @@
+# main.py
+# 
+# Aaron Chan
+# CS 445 Machine Learning (Winter 2019)
+# Homework 4 - Naive Bayes and Logistic Regression
+
+# Classify the spam data base by using Gaussian Naive Bayes in part 1
+# Classify using Linear Regressino in part 2
 
 import sklearn.metrics as metric
 from sklearn.model_selection import train_test_split
-import numpy
-
-EPSILON = 0.0001
+from math import pi
+import numpy 
+import gaussian_naive as g
 
 #========= Data Import and Preprocessing ==========
-DATA_PATH = "../HW3/spambase.data"
+DATA_PATH = "../../HW3/spambase.data"
 DELIMITER = ","
 data  = numpy.loadtxt(DATA_PATH,delimiter=DELIMITER)
 label = data[:,-1]
@@ -15,11 +23,8 @@ data  = numpy.delete(data,-1,axis=1)
 # Randomize data and split in half for test and train sets
 traind, testd, trainl, testl = train_test_split(data, label, test_size=0.5, random_state=0)
 
-# Prior probabilities for each class from training data
-p_Spam = numpy.sum(trainl)/len(trainl)
-p_NotSpam = 1 - p_Spam
-print("P(spam) = {}\tP(not spam) = {}".format(p_Spam,p_NotSpam))
+model = g.Spam_Naive_Bayes(traind,trainl)
+a = model.predict(testd)
 
-mean = numpy.mean(traind,axis=0).reshape(1,-1) # Calculate mean of each feature (columns)
-std = numpy.std(traind,axis=0).reshape(1,-1)   # Calculate standard deviation of each feature
-
+accuracy = metric.accuracy_score(testl,a)
+print("Accuracy = {0:.2%}".format(accuracy))
